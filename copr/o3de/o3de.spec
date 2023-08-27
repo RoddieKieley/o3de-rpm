@@ -19,8 +19,8 @@
 %global		USE_SYSTEM_PACKAGES	OFF
 
 Name:		o3de
-Version:	2305.0
-Release:	6%{?dist}
+Version:	2305.1
+Release:	1%{?dist}
 Summary:	Open 3D Engine
 # Note bundled dependencies are licensed under a number of other different licenses
 License:	ASL 2.0 or MIT
@@ -29,6 +29,8 @@ ExclusiveArch:	x86_64
 
 # The O3DE release URL
 Source0:       https://github.com/o3de/o3de/releases/download/%{version}/%{name}-%{version}-lfs.tar.gz
+Source43:      https://github.com/o3de/o3de/releases/download/%{version}/%{name}-%{version}-lfs.tar.gz.partaa
+Source44:      https://github.com/o3de/o3de/releases/download/%{version}/%{name}-%{version}-lfs.tar.gz.partab
 
 # Vendored/bundled dependencies
 Source1:	%{BUNDLED_PACKAGE_URL}/assimp-5.2.5-rev1-linux.tar.xz
@@ -104,9 +106,6 @@ Patch8: BuiltInPackages.patch
 Patch9: LYPython.patch
 # Move openssl fix
 Patch10: OpenSSL_linux.patch
-# Remove PyYaml
-# https://github.com/o3de/o3de/issues/16392
-Patch11: requirements.patch
 
 BuildRequires:	clang
 BuildRequires:	cmake
@@ -189,6 +188,7 @@ Provides:	bundled(zstd) = 1.35
 Open 3D Engine (O3DE) is an Apache 2.0-licensed multi-platform 3D engine that enables developers and content creators to build AAA games, cinema-quality 3D worlds, and high-fidelity simulations without any fees or commercial obligations. 
 
 %prep
+cat %{_sourcedir}/%{name}-%{version}-lfs.tar.gz.partaa %{_sourcedir}/%{name}-%{version}-lfs.tar.gz.partab > %{_sourcedir}/%{name}-%{version}-lfs.tar.gz
 %setup -c -n %{name}-%{version}
 
 %patch 0
@@ -202,7 +202,6 @@ Open 3D Engine (O3DE) is an Apache 2.0-licensed multi-platform 3D engine that en
 %patch 8
 %patch 9
 %patch 10
-%patch 11
 
 mkdir -p %{THIRD_PARTY_PATH}/downloaded_packages
 
@@ -326,6 +325,9 @@ popd
 rm -rf %{INSTALL_PATH}
 
 %changelog
+* Thu Aug 24 2023 Roddie Kieley <roddie@kieley.ca> 2305.1-1
+- Updated for v23.05.1 release
+
 * Fri Aug 4 2023 Nicholas Frizzell <nfrizzel@redhat.com> 2305.0-6
 - Misc. cleanup and documentation
 
